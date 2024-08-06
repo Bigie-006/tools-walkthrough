@@ -1,0 +1,116 @@
+
+So to practice I decided to try to use ssh to connect to various users on my local device and this is everything (I think) I found out 
+
+I'll add my Chatgpt chats link to this
+
+Setting up
+
+	1) I created some 2 new users (ubuntu and fedore)
+	
+	2) Made a home directory for ubuntu since useradd doesn't create home directories for users (adduser does)
+	
+	3) launched two more instances of the terminal and changed to the various users and moved into their home directories
+		su username
+		cd ../username or /home/username
+		
+	4) made sure ssh was installed and running 
+		sudo apt update 
+		sudo apt upgrade
+		sudo apt-get install openssh-server
+		sudo systemctl start ssh
+		sudo systemctl status ssh
+		sudo systemctl enable ssh (to get ssh to start on booting)
+		
+Connecting 
+
+	1) connecting to different users; 
+		ssh username@localhost 
+		or 
+		ssh username@127.0.0.1
+		
+		(all the users are on the same local machine so the part for the ip or hostname has to be the loopback address (127.0.0.1) or localhost)
+		
+	2) terminating the connection;
+		ctrl + D
+		
+Doing stuff
+
+	1) file transfer with scp;
+	
+		a) from client (local machine) to server (remote machine)  
+			scp /path/to/local/file remote-user@localhost:/path/to/remote/directory/or/file	
+			
+		b) from server (remote machine) to client (local machine)
+			scp remote-user@localhost:/path/to/remote/file /path/to/local/directory/or/file
+
+	2) directory transfer with scp;
+		this is similar to the file transfer, the only difference is that the -r flag has to be used
+		
+		a) from client (local machine) to server (remote machine)
+			scp -r /path/to/local/directory remote-user@localhost:/path/to/remote/directory
+		
+		b) from server (remote machine) to client (local machine)
+			scp -r remote-user@localhost:/path/to/remote/directory /path/to/local/directory
+
+	3) copying the content of a file into another file with scp;
+		
+		a) from client (local machine) to server (remote machine)
+			scp /path/to/local/file remote-user@localhost:/path/to/remote/file
+		
+		b) from server (remote machine) to client (local machine)
+			scp remote-user@localhost:/path/to/remote/file /path/to/local/file
+			
+	The file path can start with a ~/ and it's all going to be fine 
+		
+
+Connecting VM and host machine
+	
+	1) Connecting from host machine to VM
+		ssh username@ip_of_vm 
+
+	2) Connecting from VM to host machine
+		There are some prerequisites;
+			Openssh server service must be installed, up and running
+			The windows firewall must allow ssh connections 
+			The VM network adapter has to be set to bridged mode (although I tried with the NAT mode and it still worked)
+		
+			ssh username_of_host@host_ip
+			My username was user by default
+
+
+File transfer between VM and host
+	
+	1) Transfer from host machine to VM
+		
+
+	2) Transfer from VM to host machine
+		scp (-r) username@ip_of_VM:path/to/remote/file/or/directory path/to/local/directory 
+	
+	The "~" didn't work when I tried to use it for listing out the receiving directory for the host machine but the "." worked.  
+
+
+The listing of the directories can be done with either "/" or "\" and it'll still work.
+
+To transfer directories the -r flag still has to be used.
+
+
+Notes:
+	For listing out the directories for windows it's safer to just start with the C:/Users/user, cause I had a few issues with the listing of the directories twice but it all went well when I used the absolute path
+
+	Multiple clients (I tried 2) can connect to a single ssh server
+
+	To end an ssh session in cmd "exit" is used
+
+		
+Things to try;
+	Since the localhost is used when connecting to different user on the same machine, the 192.168... will most likely be used when connecting to differnt machines on a network. 192.168... is a class of private ip addresses
+
+	How to change the from one terminal to another
+		cmd to powershell
+		cmd to bash
+		default shell on Linux to bash
+	
+
+Funny thing, I ssh'd into a new user and then ssh'd into another user so I logged out for the first time and didn't see the changes I made and decided to ssh out and see what happens and surprisingly I was dreaming in my dream
+
+	
